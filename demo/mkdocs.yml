@@ -1,0 +1,71 @@
+site_name: COD Lab Demo 2026
+site_url: https://example.com/COD/lab/
+site_description: 一个用 MkDocs + Material for MkDocs 搭建的文档站 Demo，复刻 COD 课程站的三段式布局架构。
+site_author: USTC
+
+# 主题配置
+theme:
+  name: material
+  language: zh
+  features:
+    - navigation.tabs          # 顶部标签页
+    - navigation.sections      # 侧边栏分组
+    - navigation.expand        # 侧边栏默认展开
+    - navigation.top           # 返回顶部按钮
+    - search.suggest
+    - search.highlight
+    - content.code.copy        # 代码块复制按钮
+    - content.tabs.link
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/weather-night
+        name: 切换到深色模式
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/weather-sunny
+        name: 切换到浅色模式
+
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.highlight
+  - pymdownx.inlinehilite
+  - pymdownx.tabbed
+  - tables
+  - toc:
+      permalink: true
+
+plugins:
+  - search
+
+# 站点导航结构（多级、可折叠）
+nav:
+  - 首页: index.md
+  - 实验:
+    - 实验 1 - 环境搭建: labs/lab1.md
+    - 实验 2 - 指令系统:
+      - 概述: labs/lab2.md
+      - 算数指令: labs/lab2/add.md
+      - 访存指令: labs/lab2/mem.md
+    - 实验 3 - 流水线: labs/lab3.md
+    - 实验 4 - 缓存: labs/lab4.md
+  - 关于:
+    - 简介: about.md
+    - 参考文献: reference.md
+
+copyright: Copyright &copy; 2026 USTC SOC · Made with
+extra:
+  generator: false
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com
+    - icon: fontawesome/solid/globe
+      link: https://soc.ustc.edu.cn
