@@ -62,7 +62,7 @@ watch(
 <template>
   <div v-if="module" class="content">
     <p class="content-meta">
-      <router-link to="/">← 返回实验列表</router-link>
+      <router-link :to="`/category/${module.category}`">← 返回实验列表</router-link>
     </p>
     <h1 class="content-title">{{ module.title }}</h1>
 
