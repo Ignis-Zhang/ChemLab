@@ -49,3 +49,35 @@ src/
 - **金属镁相对原子质量的测定**：差量法求镁质量 → 排水集气测 H₂ 体积 → 理想气体定律（含水蒸气压与液面差校正）求 n(H₂) → 得 Ar(Mg) 并与理论值 24.305 比较计算相对误差。
 
 > 数据全部在浏览器本地计算，不会上传到任何服务器。
+
+## 多人协作
+
+仓库使用 Git 工作流，团队成员共同维护 `main` 分支：
+
+```bash
+git clone <你的远端地址>
+npm install
+# 改代码 / 新增实验模块（见上）
+npm test && npm run build
+git add -A && git commit -m "..."
+git push origin main     # 推送后自动触发线上部署
+```
+
+## 部署（GitHub Actions → 学校云服务器）
+
+站点是**纯前端静态站**，`npm run build` 产出 `dist/`，由 Nginx 静态托管。
+
+- **首次搭建服务器**（只需做一次）：
+  ```bash
+  scp -P 683 deploy/setup-server.sh deploy/nginx.conf root@114.214.241.56:/tmp/
+  ssh -p 683 root@114.214.241.56 'bash /tmp/setup-server.sh'
+  ```
+- **一次性配置 GitHub Actions**（推送即部署）：在仓库
+  `Settings → Secrets and variables → Actions` 添加 Secret——
+  `DEPLOY_HOST / DEPLOY_PORT / DEPLOY_USER / DEPLOY_PASS`（或密钥 `DEPLOY_KEY`）/ `DEPLOY_DIR`。
+- 之后每次 `git push origin main`，GitHub Actions 自动构建并 rsync 到服务器，
+  线上立即更新（详见 `.github/workflows/deploy.yml`）。
+- **手动发布**（不想用 CI 时）：`bash deploy/deploy.sh`。
+- 站点目录：`/var/www/chemlab`；Nginx 配置模板见 `deploy/nginx.conf`。
+
+> ⚠️ 服务器 SSH 密码属于敏感凭据，请放入 GitHub Secret，勿提交到仓库。

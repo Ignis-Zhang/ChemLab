@@ -1,0 +1,77 @@
+# ============================================================================
+# 自动部署：推送到 main 分支后，GitHub Actions 在云端构建 dist/，
+# 并通过 SSH 上传到学校云服务器，实现「push 即上线」的多人协作流程。
+#
+# 需要在 GitHub 仓库 Settings → Secrets and variables → Actions 配置以下
+# Secret（Settings → Security → Secrets and variables → Actions → New secret）：
+#   DEPLOY_HOST   = 114.214.241.56
+#   DEPLOY_PORT   = 683
+#   DEPLOY_USER   = root
+#   DEPLOY_PASS   = <服务器 SSH 密码>（用 password 认证时）
+#   DEPLOY_KEY    = <服务器 SSH 私钥>（强烈推荐用密钥认证，替代 DEPLOY_PASS）
+#   DEPLOY_DIR    = /var/www/chemlab
+#
+# 若用密钥认证（DEPLOY_KEY）：把公钥加入服务器 /root/.ssh/authorized_keys；
+# 若用密码认证（DEPLOY_PASS）：本 job 依赖 sshpass，位密码直接传给 ssh，
+#   请确保此 runner 上已装 sshpass（见 job 内）。
+# ============================================================================
+name: Deploy to campus server
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch: # 允许手动触发
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install deps
+        run: npm ci
+
+      - name: Typecheck & build
+        run: npm run build
+        # （测试可选：npm test 通过后才部署——建议取消下行注释）
+        # npm test
+
+      - name: Install sshpass (password auth)
+        if: ${{ secrets.DEPLOY_KEY == '' && secrets.DEPLOY_PASS != '' }}
+        run: sudo apt-get update && sudo apt-get install -y sshpass
+
+      - name: Deploy via SSH key
+        if: ${{ secrets.DEPLOY_KEY != '' }}
+        env:
+          HOST: ${{ secrets.DEPLOY_HOST }}
+          PORT: ${{ secrets.DEPLOY_PORT }}
+          USER: ${{ secrets.DEPLOY_USER }}
+          KEY:  ${{ secrets.DEPLOY_KEY }}
+          DIR:  ${{ secrets.DEPLOY_DIR }}
+        run: |
+          mkdir -p ~/.ssh
+          echo "$KEY" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -p "$PORT" -H "$HOST" >> ~/.ssh/known_hosts 2>/dev/null
+          rsync -a --delete -e "ssh -i ~/.ssh/id_rsa -p $PORT -o StrictHostKeyChecking=no" \
+            ./dist/ "$USER@$HOST:$DIR/"
+
+      - name: Deploy via password
+        if: ${{ secrets.DEPLOY_KEY == '' }}
+        env:
+          HOST: ${{ secrets.DEPLOY_HOST }}
+          PORT: ${{ secrets.DEPLOY_PORT }}
+          USER: ${{ secrets.DEPLOY_USER }}
+          PASS: ${{ secrets.DEPLOY_PASS }}
+          DIR:  ${{ secrets.DEPLOY_DIR }}
+        run: |
+          sshpass -p "$PASS" rsync -a --delete \
+            -e "ssh -p $PORT -o StrictHostKeyChecking=no" \
+            ./dist/ "$USER@$HOST:$DIR/"
