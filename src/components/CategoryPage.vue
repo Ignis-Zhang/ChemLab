@@ -30,19 +30,17 @@ onUnmounted(() => setToc([]))
 
     <section id="sec-modules" class="block">
       <h2 class="block-title">{{ category.name }} · 实验列表</h2>
-      <div v-if="visible.length" class="module-grid">
+      <div v-if="visible.length" class="exp-list">
         <router-link
           v-for="(m, i) in visible"
           :key="m.id"
           :to="`/experiments/${m.id}`"
-          class="module-card"
+          class="exp-item"
         >
-          <div class="module-card-head">
-            <span class="module-badge">实验 {{ i + 1 }}</span>
-            <span class="module-arrow">→</span>
-          </div>
-          <h3 class="module-card-title">{{ m.title }}</h3>
-          <p class="module-card-objective">{{ m.objective }}</p>
+          <span class="exp-index">{{ String(i + 1).padStart(2, '0') }}</span>
+          <span class="exp-arrow">›</span>
+          <span class="exp-name">{{ m.title }}</span>
+          <span class="exp-hint">点击进入</span>
         </router-link>
       </div>
       <p v-else class="no-results">

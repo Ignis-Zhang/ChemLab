@@ -496,6 +496,90 @@ details.admonition:not([open]) > .admonition-title::after {
 }
 .md-footer-links a { color: var(--muted); }
 
+/* ---------- 学科页实验列表（花哨版） ---------- */
+.exp-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 12px;
+}
+.exp-item {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 14px 18px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, color-mix(in srgb, var(--accent) 3%, #fff), color-mix(in srgb, var(--accent) 8%, #fff));
+  border: 1px solid color-mix(in srgb, var(--accent) 12%, var(--border));
+  text-decoration: none;
+  color: var(--text);
+  transition: all 0.25s ease;
+  position: relative;
+  overflow: hidden;
+}
+.exp-item::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background: var(--accent);
+  border-radius: 10px 0 0 10px;
+  opacity: 0;
+  transition: opacity 0.25s;
+}
+.exp-item:hover {
+  transform: translateX(4px);
+  box-shadow: 0 4px 16px color-mix(in srgb, var(--accent) 15%, transparent);
+  border-color: color-mix(in srgb, var(--accent) 30%, var(--border));
+  text-decoration: none;
+}
+.exp-item:hover::before { opacity: 1; }
+/* 序号 */
+.exp-index {
+  font-size: 26px;
+  font-weight: 700;
+  color: #37474f;
+  font-family: 'JetBrains Mono', monospace;
+  min-width: 36px;
+  line-height: 1;
+}
+/* 信息区 */
+.exp-info {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.exp-name {
+  font-size: 17px;
+  font-weight: 600;
+  color: #263238;
+  flex: 1;
+}
+/* 箭头（保持原位） */
+.exp-arrow {
+  font-size: 22px;
+  color: var(--accent);
+  flex-shrink: 0;
+  line-height: 1;
+}
+/* 点击进入（右侧，悬停显示） */
+.exp-hint {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--accent);
+  opacity: 0;
+  transform: translateX(6px);
+  transition: all 0.3s ease;
+  flex-shrink: 0;
+}
+.exp-item:hover .exp-hint {
+  opacity: 1;
+  transform: translateX(0);
+}
+
 /* ---------- 响应式 ---------- */
 @media (max-width: 1080px) {
   .md-body { grid-template-columns: 240px 1fr; }
