@@ -1,29 +1,19 @@
 # ============================================================================
-# 自动部署：推送到 main 分支后，GitHub Actions 在云端构建 dist/，
-# 并通过 SSH 上传到学校云服务器，实现「push 即上线」的多人协作流程。
-#
-# 需要在 GitHub 仓库 Settings → Secrets and variables → Actions 配置以下
-# Secret（Settings → Security → Secrets and variables → Actions → New secret）：
-#   DEPLOY_HOST   = 114.214.241.56
-#   DEPLOY_PORT   = 683
-#   DEPLOY_USER   = root
-#   DEPLOY_PASS   = <服务器 SSH 密码>（用 password 认证时）
-#   DEPLOY_KEY    = <服务器 SSH 私钥>（强烈推荐用密钥认证，替代 DEPLOY_PASS）
-#   DEPLOY_DIR    = /var/www/chemlab
-#
-# 若用密钥认证（DEPLOY_KEY）：把公钥加入服务器 /root/.ssh/authorized_keys；
-# 若用密码认证（DEPLOY_PASS）：本 job 依赖 sshpass，密码直接传给 ssh，
-#   请确保此 runner 上已装 sshpass（见 job 内）。
+# CI/CD 流程：推送到 main 分支后，GitHub Actions 构建 dist/ 并上传为 Artifact。
+# 由于校园云服务器可能限制海外 IP 访问，部署改为以下方式之一：
+#   1) 本地手动部署：下载 Artifact 后 bash deploy/deploy.sh
+#   2) 本地直接构建：npm run build && bash deploy/deploy.sh
+#   3) 若服务器可从 GitHub runner 访问，也可在 workflow 中直接 rsync
 # ============================================================================
-name: Deploy to campus server
+name: Build & Package
 
 on:
   push:
     branches: [main]
-  workflow_dispatch: # 允许手动触发
+  workflow_dispatch:
 
 jobs:
-  build-and-deploy:
+  build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -40,36 +30,10 @@ jobs:
 
       - name: Typecheck & build
         run: npm run build
-        # （测试可选：npm test 通过后才部署——建议取消下行注释）
-        # npm test
 
-      - name: Deploy to server
-        env:
-          HOST: ${{ secrets.DEPLOY_HOST }}
-          PORT: ${{ secrets.DEPLOY_PORT }}
-          USER: ${{ secrets.DEPLOY_USER }}
-          KEY:  ${{ secrets.DEPLOY_KEY }}
-          PASS: ${{ secrets.DEPLOY_PASS }}
-          DIR:  ${{ secrets.DEPLOY_DIR }}
-        run: |
-          if [ -n "$KEY" ]; then
-            echo "==> 使用 SSH 密钥部署"
-            mkdir -p ~/.ssh
-            printf '%s\n' "$KEY" > ~/.ssh/id_rsa
-            chmod 600 ~/.ssh/id_rsa
-            echo "==> 密钥文件已写入，前 20 字符：$(head -c 20 ~/.ssh/id_rsa)"
-            ssh-keyscan -p "$PORT" -H "$HOST" >> ~/.ssh/known_hosts 2>/dev/null || true
-            echo "==> 开始 rsync..."
-            rsync -av --delete --no-perms --no-owner --no-group -e "ssh -i ~/.ssh/id_rsa -p $PORT -o StrictHostKeyChecking=no -o ConnectTimeout=10" \
-              ./dist/ "$USER@$HOST:$DIR/"
-            echo "==> 部署完成"
-          elif [ -n "$PASS" ]; then
-            echo "==> 使用密码部署"
-            sudo apt-get update -qq && sudo apt-get install -y -qq sshpass
-            sshpass -p "$PASS" rsync -a --delete \
-              -e "ssh -p $PORT -o StrictHostKeyChecking=no" \
-              ./dist/ "$USER@$HOST:$DIR/"
-          else
-            echo "::error::未配置 DEPLOY_KEY 或 DEPLOY_PASS，无法部署"
-            exit 1
-          fi
+      - name: Upload dist artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist/
+          retention-days: 30
