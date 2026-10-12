@@ -12,7 +12,7 @@
 #   DEPLOY_DIR    = /var/www/chemlab
 #
 # 若用密钥认证（DEPLOY_KEY）：把公钥加入服务器 /root/.ssh/authorized_keys；
-# 若用密码认证（DEPLOY_PASS）：本 job 依赖 sshpass，位密码直接传给 ssh，
+# 若用密码认证（DEPLOY_PASS）：本 job 依赖 sshpass，密码直接传给 ssh，
 #   请确保此 runner 上已装 sshpass（见 job 内）。
 # ============================================================================
 name: Deploy to campus server
@@ -43,35 +43,30 @@ jobs:
         # （测试可选：npm test 通过后才部署——建议取消下行注释）
         # npm test
 
-      - name: Install sshpass (password auth)
-        if: secrets.DEPLOY_KEY == '' && secrets.DEPLOY_PASS != ''
-        run: sudo apt-get update && sudo apt-get install -y sshpass
-
-      - name: Deploy via SSH key
-        if: secrets.DEPLOY_KEY != ''
+      - name: Deploy to server
         env:
           HOST: ${{ secrets.DEPLOY_HOST }}
           PORT: ${{ secrets.DEPLOY_PORT }}
           USER: ${{ secrets.DEPLOY_USER }}
           KEY:  ${{ secrets.DEPLOY_KEY }}
-          DIR:  ${{ secrets.DEPLOY_DIR }}
-        run: |
-          mkdir -p ~/.ssh
-          echo "$KEY" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan -p "$PORT" -H "$HOST" >> ~/.ssh/known_hosts 2>/dev/null
-          rsync -a --delete -e "ssh -i ~/.ssh/id_rsa -p $PORT -o StrictHostKeyChecking=no" \
-            ./dist/ "$USER@$HOST:$DIR/"
-
-      - name: Deploy via password
-        if: secrets.DEPLOY_KEY == ''
-        env:
-          HOST: ${{ secrets.DEPLOY_HOST }}
-          PORT: ${{ secrets.DEPLOY_PORT }}
-          USER: ${{ secrets.DEPLOY_USER }}
           PASS: ${{ secrets.DEPLOY_PASS }}
           DIR:  ${{ secrets.DEPLOY_DIR }}
         run: |
-          sshpass -p "$PASS" rsync -a --delete \
-            -e "ssh -p $PORT -o StrictHostKeyChecking=no" \
-            ./dist/ "$USER@$HOST:$DIR/"
+          if [ -n "$KEY" ]; then
+            echo "==> 使用 SSH 密钥部署"
+            mkdir -p ~/.ssh
+            echo "$KEY" > ~/.ssh/id_rsa
+            chmod 600 ~/.ssh/id_rsa
+            ssh-keyscan -p "$PORT" -H "$HOST" >> ~/.ssh/known_hosts 2>/dev/null
+            rsync -a --delete -e "ssh -i ~/.ssh/id_rsa -p $PORT -o StrictHostKeyChecking=no" \
+              ./dist/ "$USER@$HOST:$DIR/"
+          elif [ -n "$PASS" ]; then
+            echo "==> 使用密码部署"
+            sudo apt-get update -qq && sudo apt-get install -y -qq sshpass
+            sshpass -p "$PASS" rsync -a --delete \
+              -e "ssh -p $PORT -o StrictHostKeyChecking=no" \
+              ./dist/ "$USER@$HOST:$DIR/"
+          else
+            echo "::error::未配置 DEPLOY_KEY 或 DEPLOY_PASS，无法部署"
+            exit 1
+          fi
