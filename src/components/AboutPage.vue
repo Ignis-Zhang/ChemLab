@@ -16,16 +16,14 @@ onUnmounted(() => setToc([]))
       <router-link to="/">← 返回实验列表</router-link>
     </p>
     <h1 class="content-title">关于本站</h1>
-    <p class="content-meta">无机化学实验数据处理 · Material for MkDocs 风格</p>
 
-    <div id="sec-about" class="admonition admonition-tip">
-      <div class="admonition-title">关于本站</div>
+    <details id="sec-about" class="admonition admonition-tip" open>
+      <summary class="admonition-title">关于本站</summary>
       <p>
         本站辅助<b>无机化学实验</b>课程教学：学生在实验中记录原始数据后，按每个实验固定的
         数据处理流程<b>即时</b>获得最终结果与异常反馈——发现问题时可及时调整，无需等实验结束后才发现异常。
       </p>
-      <p class="admonition-fine">纯前端静态站点：数据仅在浏览器本地计算，不上传任何服务器。</p>
-    </div>
+    </details>
 
     <section id="sec-stack" class="block">
       <h2 class="block-title">技术栈</h2>

@@ -65,10 +65,10 @@ export const magnesium: ExperimentModule = {
       hint: '由气压计读取',
       group: 'common',
     },
-    // —— 第 A 份 ——
+    // —— 第 1 组 ——
     {
       id: 'm_A',
-      label: '镁条质量 A (m_A)',
+      label: '镁条质量 (m_1)',
       unit: 'g',
       type: 'number',
       step: 0.0001,
@@ -78,7 +78,7 @@ export const magnesium: ExperimentModule = {
     },
     {
       id: 'V1_A',
-      label: '量管初始读数 A (V1)',
+      label: '量管初始读数 (V_始)',
       unit: 'mL',
       type: 'number',
       step: 0.01,
@@ -87,7 +87,7 @@ export const magnesium: ExperimentModule = {
     },
     {
       id: 'V2_A',
-      label: '量管最终读数 A (V2)',
+      label: '量管最终读数 (V_终)',
       unit: 'mL',
       type: 'number',
       step: 0.01,
@@ -95,10 +95,10 @@ export const magnesium: ExperimentModule = {
       hint: '读取时水平管与量气管内液面保持同一水平',
       group: 'A',
     },
-    // —— 第 B 份 ——
+    // —— 第 2 组 ——
     {
       id: 'm_B',
-      label: '镁条质量 B (m_B)',
+      label: '镁条质量 (m_2)',
       unit: 'g',
       type: 'number',
       step: 0.0001,
@@ -108,7 +108,7 @@ export const magnesium: ExperimentModule = {
     },
     {
       id: 'V1_B',
-      label: '量管初始读数 B (V1)',
+      label: '量管初始读数 (V_始)',
       unit: 'mL',
       type: 'number',
       step: 0.01,
@@ -117,7 +117,7 @@ export const magnesium: ExperimentModule = {
     },
     {
       id: 'V2_B',
-      label: '量管最终读数 B (V2)',
+      label: '量管最终读数 (V_终)',
       unit: 'mL',
       type: 'number',
       step: 0.01,
@@ -125,10 +125,10 @@ export const magnesium: ExperimentModule = {
       hint: '读取时水平管与量气管内液面保持同一水平',
       group: 'B',
     },
-    // —— 第 C 份 ——
+    // —— 第 3 组 ——
     {
       id: 'm_C',
-      label: '镁条质量 C (m_C)',
+      label: '镁条质量 (m_3)',
       unit: 'g',
       type: 'number',
       step: 0.0001,
@@ -138,7 +138,7 @@ export const magnesium: ExperimentModule = {
     },
     {
       id: 'V1_C',
-      label: '量管初始读数 C (V1)',
+      label: '量管初始读数 (V_始)',
       unit: 'mL',
       type: 'number',
       step: 0.01,
@@ -147,7 +147,7 @@ export const magnesium: ExperimentModule = {
     },
     {
       id: 'V2_C',
-      label: '量管最终读数 C (V2)',
+      label: '量管最终读数 (V_终)',
       unit: 'mL',
       type: 'number',
       step: 0.01,
@@ -163,33 +163,33 @@ export const magnesium: ExperimentModule = {
     { id: 'P_H2O_kPa', label: '水蒸气压 (kPa)', expression: (c) => c.helpers.interp(c.tables.h2o, c.inputs.T) },
     { id: 'P_H2O_atm', label: '水蒸气压 (atm)', expression: (c) => c.derived.P_H2O_kPa / c.constants.kPa_per_atm },
     { id: 'P_gas_atm', label: '气体压强 (atm)', expression: (c) => c.inputs.P_atm / c.constants.kPa_per_atm },
-    // 第 A 份
-    { id: 'V_H2_A', label: 'A H₂ 体积 (mL)', expression: (c) => c.inputs.V2_A - c.inputs.V1_A },
-    { id: 'V_H2_L_A', label: 'A H₂ 体积 (L)', expression: (c) => c.derived.V_H2_A / 1000 },
-    { id: 'n_H2_A', label: 'A H₂ 物质的量', expression: (c) => (c.derived.P_gas_atm - c.derived.P_H2O_atm) * c.derived.V_H2_L_A / (c.constants.R_atm_L * c.derived.T_K) },
-    { id: 'n_Mg_A', label: 'A Mg 物质的量', expression: (c) => c.derived.n_H2_A / c.constants.stoich_Mg_to_H2 },
-    { id: 'Ar_A', label: 'A 相对原子质量', expression: (c) => c.inputs.m_A / c.derived.n_Mg_A },
-    // 第 B 份
-    { id: 'V_H2_B', label: 'B H₂ 体积 (mL)', expression: (c) => c.inputs.V2_B - c.inputs.V1_B },
-    { id: 'V_H2_L_B', label: 'B H₂ 体积 (L)', expression: (c) => c.derived.V_H2_B / 1000 },
-    { id: 'n_H2_B', label: 'B H₂ 物质的量', expression: (c) => (c.derived.P_gas_atm - c.derived.P_H2O_atm) * c.derived.V_H2_L_B / (c.constants.R_atm_L * c.derived.T_K) },
-    { id: 'n_Mg_B', label: 'B Mg 物质的量', expression: (c) => c.derived.n_H2_B / c.constants.stoich_Mg_to_H2 },
-    { id: 'Ar_B', label: 'B 相对原子质量', expression: (c) => c.inputs.m_B / c.derived.n_Mg_B },
-    // 第 C 份
-    { id: 'V_H2_C', label: 'C H₂ 体积 (mL)', expression: (c) => c.inputs.V2_C - c.inputs.V1_C },
-    { id: 'V_H2_L_C', label: 'C H₂ 体积 (L)', expression: (c) => c.derived.V_H2_C / 1000 },
-    { id: 'n_H2_C', label: 'C H₂ 物质的量', expression: (c) => (c.derived.P_gas_atm - c.derived.P_H2O_atm) * c.derived.V_H2_L_C / (c.constants.R_atm_L * c.derived.T_K) },
-    { id: 'n_Mg_C', label: 'C Mg 物质的量', expression: (c) => c.derived.n_H2_C / c.constants.stoich_Mg_to_H2 },
-    { id: 'Ar_C', label: 'C 相对原子质量', expression: (c) => c.inputs.m_C / c.derived.n_Mg_C },
+    // 第 1 组
+    { id: 'V_H2_A', label: 'H₂ 体积 1 (mL)', expression: (c) => c.inputs.V2_A - c.inputs.V1_A },
+    { id: 'V_H2_L_A', label: 'H₂ 体积 1 (L)', expression: (c) => c.derived.V_H2_A / 1000 },
+    { id: 'n_H2_A', label: 'H₂ 物质的量 1', expression: (c) => (c.derived.P_gas_atm - c.derived.P_H2O_atm) * c.derived.V_H2_L_A / (c.constants.R_atm_L * c.derived.T_K) },
+    { id: 'n_Mg_A', label: 'Mg 物质的量 1', expression: (c) => c.derived.n_H2_A / c.constants.stoich_Mg_to_H2 },
+    { id: 'Ar_A', label: '相对原子质量 1', expression: (c) => c.inputs.m_A / c.derived.n_Mg_A },
+    // 第 2 组
+    { id: 'V_H2_B', label: 'H₂ 体积 2 (mL)', expression: (c) => c.inputs.V2_B - c.inputs.V1_B },
+    { id: 'V_H2_L_B', label: 'H₂ 体积 2 (L)', expression: (c) => c.derived.V_H2_B / 1000 },
+    { id: 'n_H2_B', label: 'H₂ 物质的量 2', expression: (c) => (c.derived.P_gas_atm - c.derived.P_H2O_atm) * c.derived.V_H2_L_B / (c.constants.R_atm_L * c.derived.T_K) },
+    { id: 'n_Mg_B', label: 'Mg 物质的量 2', expression: (c) => c.derived.n_H2_B / c.constants.stoich_Mg_to_H2 },
+    { id: 'Ar_B', label: '相对原子质量 2', expression: (c) => c.inputs.m_B / c.derived.n_Mg_B },
+    // 第 3 组
+    { id: 'V_H2_C', label: 'H₂ 体积 3 (mL)', expression: (c) => c.inputs.V2_C - c.inputs.V1_C },
+    { id: 'V_H2_L_C', label: 'H₂ 体积 3 (L)', expression: (c) => c.derived.V_H2_C / 1000 },
+    { id: 'n_H2_C', label: 'H₂ 物质的量 3', expression: (c) => (c.derived.P_gas_atm - c.derived.P_H2O_atm) * c.derived.V_H2_L_C / (c.constants.R_atm_L * c.derived.T_K) },
+    { id: 'n_Mg_C', label: 'Mg 物质的量 3', expression: (c) => c.derived.n_H2_C / c.constants.stoich_Mg_to_H2 },
+    { id: 'Ar_C', label: '相对原子质量 3', expression: (c) => c.inputs.m_C / c.derived.n_Mg_C },
     // 汇总
     { id: 'Ar_avg', label: '相对原子质量平均', expression: (c) => (c.derived.Ar_A + c.derived.Ar_B + c.derived.Ar_C) / 3 },
     { id: 'Ar_avg_rel_err', label: '平均相对误差 (%)', expression: (c) => (c.derived.Ar_avg - c.constants.Ar_Mg_theo) / c.constants.Ar_Mg_theo * 100 },
   ],
 
   results: [
-    { id: 'Ar_A', label: 'Ar(A) 测定值', unit: '', sigFigs: 3 },
-    { id: 'Ar_B', label: 'Ar(B) 测定值', unit: '', sigFigs: 3 },
-    { id: 'Ar_C', label: 'Ar(C) 测定值', unit: '', sigFigs: 3 },
+    { id: 'Ar_A', label: 'Ar_1 测定值', unit: '', sigFigs: 3 },
+    { id: 'Ar_B', label: 'Ar_2 测定值', unit: '', sigFigs: 3 },
+    { id: 'Ar_C', label: 'Ar_3 测定值', unit: '', sigFigs: 3 },
     { id: 'Ar_avg', label: 'Ar 平均值', unit: '', sigFigs: 3 },
     { id: 'Ar_avg_rel_err', label: '平均相对误差', unit: '%', dp: 2, kind: 'percentage' },
   ],

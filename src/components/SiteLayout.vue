@@ -43,9 +43,8 @@ const sidebarCategories = computed(() =>
     <header class="md-header">
       <div class="md-header-inner">
         <div class="brand">
-          <span class="brand-icon">🧪</span>
-          <span class="brand-title">无机化学实验数据处理</span>
-          <span class="brand-sub">Inorgan Chem Exp Calculator</span>
+          <span class="brand-title">化学实验助手</span>
+          <span class="brand-sub">Chem Lab Assistant</span>
         </div>
         <nav class="md-tabs">
           <router-link to="/" class="md-tab" :class="{ active: isHome }">首页</router-link>
@@ -81,7 +80,7 @@ const sidebarCategories = computed(() =>
           <div v-for="c in sidebarCategories" :key="c.id" class="nav-section">
             <div class="nav-expand nav-expand-static">
               <span class="nav-caret open">▸</span>
-              {{ c.icon }} {{ c.name }}
+              {{ c.name }}
             </div>
 
             <div class="nav-children">
@@ -123,11 +122,7 @@ const sidebarCategories = computed(() =>
     <!-- 页脚 -->
     <footer class="md-footer">
       <div class="md-footer-inner">
-        <span>Copyright © 无机化学实验数据处理</span>
-        <span class="md-footer-links">
-          <router-link to="/">首页</router-link> ·
-          <span>数据在浏览器本地计算，不上传服务器</span>
-        </span>
+        <span>Copyright © 化学实验助手</span>
       </div>
     </footer>
   </div>

@@ -25,17 +25,8 @@ onUnmounted(() => setToc([]))
     </p>
 
     <section id="sec-intro">
-      <h1 class="content-title">{{ category.icon }} {{ category.name }}</h1>
-      <p class="content-meta">{{ category.blurb }}</p>
+      <h1 class="content-title">{{ category.name }}</h1>
     </section>
-
-    <div class="admonition admonition-note">
-      <div class="admonition-title">说明</div>
-      <p>
-        本站针对每个实验固定其数据处理流程，输入原始数据后即可<b>即时</b>获得最终结果与异常反馈。
-      </p>
-      <p class="admonition-fine">纯前端静态站点：数据仅在浏览器本地计算，不上传服务器。</p>
-    </div>
 
     <section id="sec-modules" class="block">
       <h2 class="block-title">{{ category.name }} · 实验列表</h2>

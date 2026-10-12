@@ -13,10 +13,10 @@ export interface Category {
 }
 
 export const CATEGORIES: Category[] = [
-  { id: 'inorganic', name: '无机化学', icon: '🧪', blurb: '元素及其化合物的制备、性质与物理化学参数测定' },
-  { id: 'organic', name: '有机化学', icon: '⚗️', blurb: '有机物的制备、分离与表征' },
-  { id: 'analytical', name: '分析化学', icon: '🔬', blurb: '定量分析与仪器分析方法' },
-  { id: 'physical', name: '物理化学', icon: '⚖️', blurb: '热力学、动力学等物理化学参数测定' },
+  { id: 'inorganic', name: '无机化学', icon: '', blurb: '元素及其化合物的制备、性质与物理化学参数测定' },
+  { id: 'organic', name: '有机化学', icon: '', blurb: '有机物的制备、分离与表征' },
+  { id: 'analytical', name: '分析化学', icon: '', blurb: '定量分析与仪器分析方法' },
+  { id: 'physical', name: '物理化学', icon: '', blurb: '热力学、动力学等物理化学参数测定' },
 ]
 
 export const CATEGORY_MAP: Record<string, Category> = Object.fromEntries(
