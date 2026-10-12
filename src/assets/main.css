@@ -53,53 +53,90 @@ code, kbd, samp, pre {
    ============================================================ */
 .site { display: flex; flex-direction: column; min-height: 100vh; }
 
-/* ---------- 顶栏 ---------- */
+/* ---------- 顶栏（Material for MkDocs 双层导航） ---------- */
 .md-header {
   background: var(--header-bg);
   color: #fff;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
   position: sticky;
   top: 0;
   z-index: 20;
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.15);
 }
 .md-header-inner {
   max-width: 1400px;
   margin: 0 auto;
-  padding: 10px 20px;
+  padding: 0 24px;
+  height: 56px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 16px;
 }
-.brand { display: flex; align-items: baseline; gap: 8px; min-width: 0; }
-.brand-icon { font-size: 20px; }
-.brand-title { font-size: 17px; font-weight: 700; letter-spacing: 0.5px; white-space: nowrap; }
-.brand-sub { font-size: 12px; opacity: 0.8; white-space: nowrap; }
+.brand {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  color: #fff;
+  gap: 8px;
+}
+.brand-icon { flex-shrink: 0; opacity: 0.9; }
+.brand-title { font-size: 20px; font-weight: 700; letter-spacing: 0.3px; }
+.brand-sub { font-size: 12px; opacity: 0.7; margin-left: 8px; white-space: nowrap; }
 
-.header-search { flex: 0 1 320px; }
+.header-right { display: flex; align-items: center; gap: 12px; }
+.header-search { flex: 0 1 280px; }
 .search-input {
   width: 100%;
-  padding: 6px 12px;
+  padding: 6px 14px;
   border: none;
-  border-radius: 4px;
-  background: rgba(255, 255, 255, 0.94);
-  color: var(--text);
+  border-radius: 5px;
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
   font-size: 14px;
+  transition: background 0.15s;
 }
-.search-input:focus { outline: 2px solid #fff; }
+.search-input::placeholder { color: rgba(255, 255, 255, 0.6); }
+.search-input:focus {
+  outline: none;
+  background: rgba(255, 255, 255, 0.2);
+}
 
-/* 顶栏标签页导航（仿 Material for MkDocs navigation.tabs） */
-.md-tabs { display: flex; align-items: center; gap: 2px; margin-left: 14px; flex: 1 1 auto; }
-.md-tab {
+/* GitHub 图标 */
+.github-link {
   color: rgba(255, 255, 255, 0.75);
-  padding: 6px 11px;
-  border-radius: 4px;
-  font-size: 13.5px;
+  display: flex;
+  align-items: center;
+  transition: color 0.15s;
+}
+.github-link:hover { color: #fff; }
+
+/* 标签栏（第二层） */
+.md-tabs {
+  background: var(--header-bg);
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+}
+.md-tabs-inner {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 12px;
+  display: flex;
+  align-items: stretch;
+}
+.md-tab {
+  color: rgba(255, 255, 255, 0.7);
+  padding: 10px 16px;
+  font-size: 14px;
   font-weight: 500;
   white-space: nowrap;
+  text-decoration: none;
+  border-bottom: 2px solid transparent;
+  transition: color 0.15s, border-color 0.15s;
 }
-.md-tab:hover { background: rgba(255, 255, 255, 0.12); text-decoration: none; color: #fff; }
-.md-tab.active { background: rgba(255, 255, 255, 0.2); color: #fff; }
+.md-tab:hover { color: #fff; text-decoration: none; }
+.md-tab.active {
+  color: #fff;
+  border-bottom-color: #fff;
+}
 
 /* ---------- 主体三栏 ---------- */
 .md-body {
@@ -468,10 +505,8 @@ details.admonition:not([open]) > .admonition-title::after {
   .md-body { grid-template-columns: 1fr; }
   .md-sidebar { display: none; }
   .header-search { display: none; }
-  .brand-sub { display: none; }
   .md-content { padding: 20px 16px 40px; }
   .fields-grid { grid-template-columns: 1fr; }
-  .md-header-inner { flex-wrap: wrap; }
-  .md-tabs { margin-left: 0; order: 3; width: 100%; }
-  .md-tab { flex: 1; text-align: center; padding: 6px 4px; }
+  .md-tabs-inner { overflow-x: auto; }
+  .md-tab { padding: 10px 12px; font-size: 13px; }
 }
