@@ -58,9 +58,9 @@ jobs:
             printf '%s\n' "$KEY" > ~/.ssh/id_rsa
             chmod 600 ~/.ssh/id_rsa
             echo "==> 密钥文件已写入，前 20 字符：$(head -c 20 ~/.ssh/id_rsa)"
-            ssh-keyscan -p "$PORT" -H "$HOST" >> ~/.ssh/known_hosts 2>/dev/null
+            ssh-keyscan -p "$PORT" -H "$HOST" >> ~/.ssh/known_hosts 2>/dev/null || true
             echo "==> 开始 rsync..."
-            rsync -av --delete -e "ssh -vvv -i ~/.ssh/id_rsa -p $PORT -o StrictHostKeyChecking=no" \
+            rsync -av --delete --no-perms --no-owner --no-group -e "ssh -i ~/.ssh/id_rsa -p $PORT -o StrictHostKeyChecking=no -o ConnectTimeout=10" \
               ./dist/ "$USER@$HOST:$DIR/"
             echo "==> 部署完成"
           elif [ -n "$PASS" ]; then
