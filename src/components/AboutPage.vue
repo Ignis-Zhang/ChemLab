@@ -17,7 +17,7 @@ onUnmounted(() => setToc([]))
     </p>
     <h1 class="content-title">关于本站</h1>
 
-    <details id="sec-about" class="admonition admonition-tip" open>
+    <details id="sec-about" class="admonition admonition-tip">
       <summary class="admonition-title">关于本站</summary>
       <p>
         本站辅助<b>无机化学实验</b>课程教学：学生在实验中记录原始数据后，按每个实验固定的

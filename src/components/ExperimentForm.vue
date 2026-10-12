@@ -67,7 +67,7 @@ watch(
     <h1 class="content-title">{{ module.title }}</h1>
 
     <!-- 实验说明：admonition 提示框 -->
-    <details id="sec-brief" class="admonition admonition-tip" open>
+    <details id="sec-brief" class="admonition admonition-tip">
       <summary class="admonition-title">实验原理与流程</summary>
       <div class="brief-lines">
         <p v-for="(line, i) in (module.brief?.split('\n') ?? [])" :key="i">{{ line }}</p>

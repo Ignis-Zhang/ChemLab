@@ -26,7 +26,7 @@ onUnmounted(() => setToc([]))
   <div class="content">
     <h1 class="content-title">化学实验助手</h1>
 
-    <details id="sec-note" class="admonition admonition-note" open>
+    <details id="sec-note" class="admonition admonition-note">
       <summary class="admonition-title">说明</summary>
       <p>
         同学们在实验时会记录许多原始数据，但要得到最终结果往往需要较复杂的计算，
