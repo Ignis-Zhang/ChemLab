@@ -44,11 +44,11 @@ jobs:
         # npm test
 
       - name: Install sshpass (password auth)
-        if: ${{ secrets.DEPLOY_KEY == '' && secrets.DEPLOY_PASS != '' }}
+        if: secrets.DEPLOY_KEY == '' && secrets.DEPLOY_PASS != ''
         run: sudo apt-get update && sudo apt-get install -y sshpass
 
       - name: Deploy via SSH key
-        if: ${{ secrets.DEPLOY_KEY != '' }}
+        if: secrets.DEPLOY_KEY != ''
         env:
           HOST: ${{ secrets.DEPLOY_HOST }}
           PORT: ${{ secrets.DEPLOY_PORT }}
@@ -64,7 +64,7 @@ jobs:
             ./dist/ "$USER@$HOST:$DIR/"
 
       - name: Deploy via password
-        if: ${{ secrets.DEPLOY_KEY == '' }}
+        if: secrets.DEPLOY_KEY == ''
         env:
           HOST: ${{ secrets.DEPLOY_HOST }}
           PORT: ${{ secrets.DEPLOY_PORT }}
