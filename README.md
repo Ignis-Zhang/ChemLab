@@ -55,29 +55,45 @@ src/
 仓库使用 Git 工作流，团队成员共同维护 `main` 分支：
 
 ```bash
-git clone <你的远端地址>
+git clone git@github.com:Ignis-Zhang/ChemLab.git
 npm install
 # 改代码 / 新增实验模块（见上）
 npm test && npm run build
 git add -A && git commit -m "..."
-git push origin main     # 推送后自动触发线上部署
+git push origin main
 ```
 
-## 部署（GitHub Actions → 学校云服务器）
+## 部署
+
+**线上地址**：<http://114.214.241.56/chemlab/>
 
 站点是**纯前端静态站**，`npm run build` 产出 `dist/`，由 Nginx 静态托管。
 
-- **首次搭建服务器**（只需做一次）：
-  ```bash
-  scp -P 683 deploy/setup-server.sh deploy/nginx.conf root@114.214.241.56:/tmp/
-  ssh -p 683 root@114.214.241.56 'bash /tmp/setup-server.sh'
-  ```
-- **一次性配置 GitHub Actions**（推送即部署）：在仓库
-  `Settings → Secrets and variables → Actions` 添加 Secret——
-  `DEPLOY_HOST / DEPLOY_PORT / DEPLOY_USER / DEPLOY_PASS`（或密钥 `DEPLOY_KEY`）/ `DEPLOY_DIR`。
-- 之后每次 `git push origin main`，GitHub Actions 自动构建并 rsync 到服务器，
-  线上立即更新（详见 `.github/workflows/deploy.yml`）。
-- **手动发布**（不想用 CI 时）：`bash deploy/deploy.sh`。
-- 站点目录：`/var/www/chemlab`；Nginx 配置模板见 `deploy/nginx.conf`。
+### 发布上线
 
-> ⚠️ 服务器 SSH 密码属于敏感凭据，请放入 GitHub Secret，勿提交到仓库。
+由于校园云服务器限制海外 IP 的 SSH 连接，GitHub Actions 无法直接部署。请在本地执行：
+
+```bash
+# 一键构建 + 部署（推荐）
+bash deploy/deploy.sh
+
+# 或分步操作
+npm run build
+rsync -a --delete -e "ssh -p 683" ./dist/ root@114.214.241.56:/var/www/chemlab/
+```
+
+### GitHub Actions
+
+推送代码后，GitHub Actions 会自动构建并将 `dist/` 打包为 Artifact，可在 [Actions 页面](https://github.com/Ignis-Zhang/ChemLab/actions) 下载。
+
+### 服务器信息
+
+| 项目 | 值 |
+|---|---|
+| 服务器 | `114.214.241.56` |
+| SSH 端口 | `683` |
+| 站点目录 | `/var/www/chemlab` |
+| 访问路径 | `/chemlab/` |
+| Nginx 配置 | `/etc/nginx/sites-available/chemlab` |
+
+> ⚠️ 服务器 SSH 密码属于敏感凭据，请勿提交到仓库。
