@@ -55,11 +55,14 @@ jobs:
           if [ -n "$KEY" ]; then
             echo "==> 使用 SSH 密钥部署"
             mkdir -p ~/.ssh
-            echo "$KEY" > ~/.ssh/id_rsa
+            printf '%s\n' "$KEY" > ~/.ssh/id_rsa
             chmod 600 ~/.ssh/id_rsa
+            echo "==> 密钥文件已写入，前 20 字符：$(head -c 20 ~/.ssh/id_rsa)"
             ssh-keyscan -p "$PORT" -H "$HOST" >> ~/.ssh/known_hosts 2>/dev/null
-            rsync -a --delete -e "ssh -i ~/.ssh/id_rsa -p $PORT -o StrictHostKeyChecking=no" \
+            echo "==> 开始 rsync..."
+            rsync -av --delete -e "ssh -vvv -i ~/.ssh/id_rsa -p $PORT -o StrictHostKeyChecking=no" \
               ./dist/ "$USER@$HOST:$DIR/"
+            echo "==> 部署完成"
           elif [ -n "$PASS" ]; then
             echo "==> 使用密码部署"
             sudo apt-get update -qq && sudo apt-get install -y -qq sshpass
