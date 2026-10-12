@@ -28,4 +28,4 @@ rsync -a --delete \
   ./dist/ "${SSH_USER}@${SSH_HOST}:${SITE_DIR}/"
 
 echo "==> 上传完成。访问："
-echo "    http://114.214.241.56  （如解析了域名则用域名）"
+echo "    http://114.214.241.56:8080  （如解析了域名则用域名）"
